@@ -7,8 +7,8 @@ module App
     , app
     ) where
 
-import Network.Wai
-import Network.Wai.Handler.Warp
+import qualified Hasql.Pool as PgPool
+import qualified Network.Wai.Handler.Warp as Warp
 import Servant
 
 import Api (server, API)
@@ -16,8 +16,13 @@ import Api (server, API)
 api :: Proxy API
 api = Proxy
 
-app :: Application
-app = serve api server
+app :: PgPool.Pool -> Application
+app pool = serve api server
 
-startApp :: Port -> IO ()
-startApp port = run port app
+mkApp :: PgPool.Settings -> IO Application
+mkApp pgSetting = do
+  pool <- PgPool.acquire pgSetting
+  return $ app pool
+
+startApp :: PgPool.Settings -> Warp.Port -> IO ()
+startApp pgSetting port = Warp.run port =<< mkApp pgSetting

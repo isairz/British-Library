@@ -1,13 +1,15 @@
+{-# LANGUAGE OverloadedStrings #-}
+
 module Main where
 
 import App (startApp)
 
--- import Data.Monoid ((<>))
--- import qualified Hasql.Pool as HP
+import Data.Monoid ((<>))
+import Hasql.Pool (Settings)
 
 -- TODO: Need config
--- dbSetting :: HP.Settings
--- dbSetting = (4, 10, "host=" <> "localhost" <> " port=5432 user=isair dbname=knowledge")
+pgSetting :: Settings
+pgSetting = (4, 10, "host=" <> "localhost" <> " port=5432 user=isair dbname=knowledge")
 
 main :: IO ()
-main = startApp 3000
+main = startApp pgSetting 3000
