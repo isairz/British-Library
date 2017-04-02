@@ -1,26 +1,16 @@
 {-# LANGUAGE DataKinds         #-}
-{-# LANGUAGE LambdaCase        #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TypeFamilies      #-}
 {-# LANGUAGE TypeOperators     #-}
 
 module Api where
 
-import           Data.Proxy
-import           Data.Text
-import           Database.Persist
-import           Servant.API
+import Servant
 
-import           Models
+import Api.User
+import Api.Static
 
-type Api =
-       "user" :> ReqBody '[JSON] User :> Post '[JSON] (Maybe (Key User))
-  :<|> "user" :> Capture "name" Text :> Get '[JSON] (Maybe User)
-  :<|> "user" :> Get '[JSON] [User]
-  :<|> "manga" :> sudo
-  -- :<|> "post" :> ReqBody '[JSON] User :> Post '[JSON] (Maybe (Key User))
-  -- :<|> "post" :> Capture "name" Text :> Get '[JSON] (Maybe User)
-  -- :<|> "post" :> Get '[JSON] [User]
+server :: Server API
+server = userServer :<|> staticServer
 
-api :: Proxy Api
-api = Proxy
+type API = UserAPI :<|> StaticAPI
