@@ -1,41 +1,34 @@
 name:                British-Library
 version:             0.1.0.0
-synopsis:            Initial project template from stack
-description:         Please see README.md
-homepage:            https://github.com/githubuser/British-Library#readme
+-- synopsis:
+-- description:
+homepage:            https://github.com/isairz/British-Library#readme
 license:             BSD3
 license-file:        LICENSE
-author:              Author name here
-maintainer:          example@example.com
-copyright:           2017 Author name here
+author:              Seongjun Kim
+maintainer:          isair.zun@gmail.com
+copyright:           2017 Seongjun Kim
 category:            Web
 build-type:          Simple
 extra-source-files:  README.md
 cabal-version:       >=1.10
 
-executable brlib
+library
   hs-source-dirs:      src
-  main-is:             Main.hs
-  ghc-options:         -threaded -rtsopts -with-rtsopts=-N
-  other-modules:       Api
-                     , App
-                     , Models
-  build-depends:       base
+  exposed-modules:     Lib
+  build-depends:       base >= 4.7 && < 5
                      , aeson
-                     , attoparsec
-                     , bytestring
-                     , monad-logger
-                     , persistent
-                     , persistent-postgresql
-                     , persistent-sqlite
-                     , persistent-template
-                     , servant
                      , servant-server
-                     , string-conversions
-                     , text
-                     , time
                      , wai
                      , warp
+  default-language:    Haskell2010
+
+executable British-Library-exe
+  hs-source-dirs:      app
+  main-is:             Main.hs
+  ghc-options:         -threaded -rtsopts -with-rtsopts=-N
+  build-depends:       base
+                     , British-Library
   default-language:    Haskell2010
 
 test-suite British-Library-test
@@ -43,10 +36,14 @@ test-suite British-Library-test
   hs-source-dirs:      test
   main-is:             Spec.hs
   build-depends:       base
-                     , British-Library
+                     , ttt
+                     , hspec
+                     , hspec-wai
+                     , hspec-wai-json
+                     , aeson
   ghc-options:         -threaded -rtsopts -with-rtsopts=-N
   default-language:    Haskell2010
 
 source-repository head
   type:     git
-  location: https://github.com/githubuser/British-Library
+  location: https://github.com/isairz/British-Library
