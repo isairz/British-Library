@@ -7,10 +7,13 @@ module Api where
 
 import Servant
 
+import Type (App)
 import Api.User
 import Api.Static
 
-server :: Server API
-server = userServer :<|> staticServer
+server :: ServerT API App
+server = userServer
+-- :<|> staticServer
 
-type API = UserAPI :<|> StaticAPI
+type API = UserAPI
+-- :<|> StaticAPI

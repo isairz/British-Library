@@ -20,6 +20,8 @@ library
                      , aeson
                      , hasql
                      , hasql-pool
+                     , monad-logger
+                     , mtl
                      , servant-server
                      , wai
                      , warp
