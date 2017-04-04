@@ -1,8 +1,6 @@
-{-# LANGUAGE GeneralizedNewtypeDeriving #-}
-{-# LANGUAGE OverloadedStrings          #-}
-
 module Type
-    ( App (..)
+    ( AppHandler (..)
+    , AppEnv (..)
     ) where
 
 import           Control.Monad.Except                 (ExceptT, MonadError)
@@ -11,8 +9,8 @@ import           Control.Monad.Reader                 (MonadIO, MonadReader,
 import qualified Hasql.Pool as PgPool
 import Servant
 
-newtype App a
-  = App
-  { runApp :: ReaderT PgPool.Pool (ExceptT ServantErr IO) a
-  } deriving ( Functor, Applicative, Monad, MonadReader PgPool.Pool,
-               MonadError ServantErr, MonadIO)
+newtype AppEnv = AppEnv {
+  db :: PgPool.Pool
+}
+
+type AppHandler = ReaderT AppEnv Handler

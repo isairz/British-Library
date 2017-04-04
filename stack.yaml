@@ -41,6 +41,9 @@ packages:
 # (e.g., acme-missiles-0.3)
 extra-deps:
 - hasql-pool-0.4.1
+- servant-0.10
+- servant-server-0.10
+- servant-multipart-0.10
 
 # Override default flag values for local packages and extra-deps
 flags: {}

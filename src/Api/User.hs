@@ -8,7 +8,7 @@ import Data.Aeson
 import Data.Aeson.TH
 import Servant
 
-import Type (App)
+import Type (AppHandler)
 
 data User = User
   { userId        :: Int
@@ -22,7 +22,7 @@ type UserAPI = "users" :> Get '[JSON] [User]
           :<|> "user1" :> Get '[JSON] User
           :<|> "user2" :> Get '[JSON] User
 
-userServer :: ServerT UserAPI App
+userServer :: ServerT UserAPI AppHandler
 userServer = usersH :<|> user1H :<|> user2H
   where
     usersH = return users
