@@ -3,11 +3,9 @@ module Type
     , AppEnv (..)
     ) where
 
-import           Control.Monad.Except                 (ExceptT, MonadError)
-import           Control.Monad.Reader                 (MonadIO, MonadReader,
-                                                       ReaderT)
-import qualified Hasql.Pool as PgPool
 import Servant
+import Control.Monad.Reader (ReaderT)
+import qualified Hasql.Pool as PgPool
 
 newtype AppEnv = AppEnv {
   db :: PgPool.Pool

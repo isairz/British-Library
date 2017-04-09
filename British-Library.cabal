@@ -18,12 +18,16 @@ library
   exposed-modules:     App
   build-depends:       base >= 4.7 && < 5
                      , aeson
+                     , bytestring
                      , hasql
                      , hasql-pool
+                     , http-media
                      , monad-logger
                      , mtl
+                     , servant-multipart
                      , servant-server
                      , wai
+                     , wai-extra
                      , warp
   default-language:    Haskell2010
 
