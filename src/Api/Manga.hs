@@ -1,6 +1,6 @@
-{-# LANGUAGE DataKinds             #-}
-{-# LANGUAGE OverloadedStrings     #-}
-{-# LANGUAGE TypeOperators         #-}
+{-# LANGUAGE DataKinds         #-}
+{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE TypeOperators     #-}
 
 module Api.Manga where
 
@@ -11,9 +11,9 @@ import qualified Hasql.Query            as HQ
 import qualified Hasql.Session          as HS
 import           Servant
 
-import           JsonString             (JsonString)
-import           PostgresJson           (PgResult, select)
-import           Type                   (AppEnv (..), AppHandler, SearchParams)
+import           PostgresJson.Query     (PgResult, SearchParams, select)
+import           PostgresJson.Servant   (JsonString)
+import           Type                   (AppEnv (..), AppHandler)
 
 type MangaAPI = "mangas" :> QueryParamForm SearchParams :> Get '[JsonString] PgResult
 
@@ -23,9 +23,7 @@ mangaServer = selectMangas
 selectMangas :: SearchParams -> AppHandler PgResult
 selectMangas params = do
   pool <- db <$> ask
-  result <- liftIO $ PgPool.use pool (HS.query () (select "manga" params))
-  liftIO $ print params
-  liftIO $ print result
+  result <- liftIO $ PgPool.use pool $ select "manga" params
   case result of
     Left err   -> throwError err404
     Right json -> return json

@@ -13,5 +13,3 @@ newtype AppEnv = AppEnv {
 }
 
 type AppHandler = ReaderT AppEnv Handler
-
-type SearchParams = HashMap T.Text [T.Text]
