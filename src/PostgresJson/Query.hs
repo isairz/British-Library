@@ -5,6 +5,7 @@ module PostgresJson.Query
   ( select
   , SearchParams
   , PgResult
+  , selectQuery
   )
 where
 
@@ -38,9 +39,9 @@ createReadStatement selectQuery =
 selectQuery :: TableName -> SearchParams -> SqlQuery
 selectQuery table params =
   "SELECT COALESCE( array_to_json(array_agg(row_to_json(" <>
-    table <>
+    pgFmtIdent table <>
   "))), '[]')::character varying from " <>
-    table <>
+    pgFmtIdent table <>
     whereF params
 
 
@@ -48,7 +49,7 @@ whereF :: SearchParams -> SqlFragment
 whereF (SearchParams conditions) = (" WHERE " <> T.intercalate " AND " ( map conditionF conditions )) `emptyOnNull` conditions
 
 conditionF :: Condition -> SqlFragment
-conditionF (Condition field operator operand) = field <> opToSqlFragment operator <> operand
+conditionF (Condition field operator operand) = pgFmtIdent field <> opToSqlFragment operator <> pgFmtLit operand
 
 emptyOnNull :: T.Text -> [a] -> T.Text
 emptyOnNull val x = if null x then "" else val

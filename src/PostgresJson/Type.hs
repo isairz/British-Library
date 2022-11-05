@@ -3,6 +3,7 @@ module PostgresJson.Type where
 
 import qualified Data.ByteString.Char8 as B8
 import           Data.HashMap.Strict   (toList)
+import           Data.Monoid           ((<>))
 import qualified Data.Text             as T
 
 import           Web.FormUrlEncoded    (FromForm, fromForm, unForm)
@@ -76,7 +77,7 @@ type Operand = T.Text
 type Operation = (Operator, Operand)
 data Condition = Condition FieldName Operator Operand deriving (Show, Eq)
 
-data SearchParams = SearchParams [Condition] deriving (Show, Eq)
+newtype SearchParams = SearchParams [Condition] deriving (Show, Eq)
 
 instance FromForm SearchParams where
   fromForm f = pure $ SearchParams conditions
@@ -84,3 +85,19 @@ instance FromForm SearchParams where
           mkCondition (k, vs) = map (parseParam k) vs
           parseParam k v = let s = T.break (=='.') v in
             Condition k (read $ T.unpack (fst s) :: Operator) (T.drop 1 $ snd s)
+
+
+trimNullChars :: T.Text -> T.Text
+trimNullChars = T.takeWhile (/= '\x0')
+
+pgFmtIdent :: SqlFragment -> SqlFragment
+pgFmtIdent x = "\"" <> T.replace "\"" "\"\"" (trimNullChars x) <> "\""
+
+pgFmtLit :: SqlFragment -> SqlFragment
+pgFmtLit x =
+ let trimmed = trimNullChars x
+     escaped = "'" <> T.replace "'" "''" trimmed <> "'"
+     slashed = T.replace "\\" "\\\\" escaped in
+ if "\\" `T.isInfixOf` escaped
+   then "E" <> slashed
+   else slashed
